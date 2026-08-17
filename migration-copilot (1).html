@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Migration Copilot — Finland &amp; Germany</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cover:#1E2A38;
+    --cover-deep:#161F2A;
+    --cover-text:#F1ECDC;
+    --page:#E8E2D2;
+    --page-line:rgba(31,42,56,0.15);
+    --ink:#20293A;
+    --ink-soft:#5B6472;
+    --gold:#8E703A;
+    --stamp:#7E3636;
+    --azure:#3D6280;
+    --font-display:'Spectral', Georgia, 'Times New Roman', serif;
+    --font-body:'Inter', -apple-system, 'Segoe UI', sans-serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background-color:var(--page);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--gold);}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 22px 90px;}
+
+  /* ============ COVER BAND ============ */
+  .cover{
+    background:linear-gradient(175deg, var(--cover), var(--cover-deep));
+    color:var(--cover-text);
+    text-align:center;
+    padding:46px 30px 34px;
+    border-bottom:2px solid var(--gold);
+    margin:0 -22px 44px;
+  }
+  .cover .label{
+    font-family:var(--font-mono);
+    font-size:10.5px;letter-spacing:3px;text-transform:uppercase;
+    color:#C9BFA0;margin-bottom:18px;
+  }
+  .seal-stage{width:58px;height:58px;margin:0 auto 16px;}
+  .seal-stage canvas{display:block;width:100%;height:100%;}
+  .cover h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(26px, 4.4vw, 36px);
+    margin:0 0 12px;
+  }
+  .cover .lede{
+    font-size:15px;color:#C9BFA0;max-width:440px;margin:0 auto;
+  }
+  .cover .doc-number{
+    margin-top:24px;
+    font-family:var(--font-mono);
+    font-size:10.5px;letter-spacing:2px;color:#8E8570;
+  }
+
+  /* ============ PAGE SECTIONS ============ */
+  section.page{
+    padding-top:30px;
+    border-top:1px solid var(--page-line);
+    margin-bottom:6px;
+  }
+  section.page .running-head{
+    font-family:var(--font-mono);
+    font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--gold);margin-bottom:10px;
+  }
+  section.page h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:21px;
+    margin:0 0 8px;
+    color:var(--ink);
+  }
+  section.page .hint{
+    font-size:13px;color:var(--ink-soft);
+    margin:0 0 22px;max-width:520px;
+  }
+
+  /* ============ TABS ============ */
+  .tabs{display:flex;gap:26px;margin-bottom:22px;border-bottom:1px solid var(--page-line);}
+  .tab{
+    background:none;border:none;cursor:pointer;
+    font-family:var(--font-body);font-size:14px;font-weight:600;
+    color:var(--ink-soft);padding:0 0 10px;
+    display:flex;align-items:baseline;gap:7px;
+    border-bottom:2px solid transparent;
+    margin-bottom:-1px;
+  }
+  .tab .code{font-family:var(--font-mono);font-size:10.5px;color:var(--gold);letter-spacing:1px;}
+  .tab.active{color:var(--ink);border-bottom-color:var(--stamp);}
+
+  /* ============ CHECKLIST ============ */
+  .item{
+    display:flex;align-items:flex-start;gap:14px;
+    padding:13px 0;
+    border-bottom:1px solid var(--page-line);
+  }
+  .item:last-of-type{border-bottom:none;}
+  .check-box{
+    width:20px;height:20px;flex:0 0 20px;margin-top:3px;
+    border:1.5px solid var(--ink-soft);
+    background:transparent;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:12px;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .check-box.done{
+    background:var(--ink);border-color:var(--ink);
+  }
+  .check-box.done span{
+    display:inline-block;animation:settle .18s ease-out;
+  }
+  @keyframes settle{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .item .txt{flex:1;font-size:14.5px;padding-top:1px;}
+  .item .txt.done{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--ink-soft);opacity:.7;}
+  .item .cat{
+    font-family:var(--font-mono);font-size:10px;color:var(--ink-soft);
+    display:block;margin-top:4px;letter-spacing:1px;text-transform:uppercase;opacity:.7;
+  }
+  .progress-row{display:flex;align-items:center;gap:12px;margin:18px 0 4px;}
+  .progress-bar{flex:1;height:3px;background:var(--page-line);}
+  .progress-fill{height:100%;background:var(--ink);transition:width .35s ease;}
+  .progress-label{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+  .reset-link{
+    display:inline-block;margin-top:16px;font-size:12px;
+    color:var(--ink-soft);cursor:pointer;text-decoration:underline;
+    background:none;border:none;font-family:inherit;padding:0;
+  }
+
+  /* ============ LANGUAGE TRACKER ============ */
+  .lang-grid{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:22px;}
+  .lang-grid > div{flex:1;min-width:150px;}
+  .lang-grid label{
+    display:block;font-size:10.5px;color:var(--ink-soft);
+    margin-bottom:6px;letter-spacing:.6px;text-transform:uppercase;font-weight:600;
+  }
+  .lang-grid select, .lang-grid input[type=text]{
+    font-family:var(--font-body);font-size:14px;
+    padding:9px 10px;width:100%;
+    border:1px solid var(--page-line);
+    background:#fff;color:var(--ink);
+  }
+  .lang-grid select:focus, .lang-grid input:focus{border-color:var(--gold);}
+  .level-track{display:flex;gap:5px;margin-top:6px;}
+  .level-cell{
+    flex:1;height:8px;background:var(--page-line);position:relative;
+  }
+  .level-cell.filled{background:var(--gold);}
+  .level-cell.current{background:var(--ink);}
+  .level-labels{display:flex;justify-content:space-between;margin-top:7px;font-family:var(--font-mono);font-size:10px;color:var(--ink-soft);}
+
+  /* ============ CHAT ============ */
+  .chat-log{max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;margin-bottom:16px;}
+  .msg{font-size:14px;line-height:1.75;white-space:pre-wrap;max-width:88%;}
+  .msg.user{
+    align-self:flex-end;text-align:right;
+    color:var(--ink);font-weight:500;
+    padding:8px 12px;background:var(--page-line);
+  }
+  .msg.bot{
+    align-self:flex-start;
+    color:var(--ink);
+    border-left:2px solid var(--gold);
+    padding:2px 0 2px 14px;
+  }
+  .msg.bot.loading{color:var(--ink-soft);font-style:italic;}
+  .chat-input-row{display:flex;gap:10px;}
+  .chat-input-row textarea{
+    flex:1;resize:none;font-family:var(--font-body);font-size:14px;
+    padding:11px 13px;border:1px solid var(--page-line);
+    background:#fff;min-height:44px;max-height:130px;
+  }
+  .chat-input-row textarea:focus{border-color:var(--gold);}
+  .send-btn{
+    background:var(--ink);color:#fff;border:none;
+    padding:0 22px;font-size:13.5px;font-weight:600;cursor:pointer;
+    font-family:var(--font-body);
+  }
+  .send-btn:hover:not(:disabled){background:var(--stamp);}
+  .send-btn:disabled{opacity:.4;cursor:default;}
+
+  footer{
+    text-align:center;margin-top:30px;padding-top:24px;
+    border-top:1px solid var(--page-line);
+    font-size:11.5px;color:var(--ink-soft);line-height:2;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="wrap" style="padding:0;">
+    <div class="label">Migration Copilot</div>
+    <div class="seal-stage" id="sealStage"></div>
+    <h1>A clear path to Finland or Germany</h1>
+    <p class="lede">One place to track your permit paperwork, your language progress, and the questions that come up along the way.</p>
+    <div class="doc-number" id="docNumber">FILE NO. — — — —</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="page">
+    <div class="running-head">01 — Application checklist</div>
+    <nav class="tabs">
+      <button class="tab active" id="tabFinland" onclick="switchCountry('finland')">
+        <span class="code">FI</span>Finland
+      </button>
+      <button class="tab" id="tabGermany" onclick="switchCountry('germany')">
+        <span class="code">DE</span>Germany
+      </button>
+    </nav>
+    <h2 id="checklistTitle">Work Residence Permit</h2>
+    <p class="hint">Check things off as you go. This is the general shape of the process — the fine print shifts by case and by year, so confirm anything time-sensitive with the official source before you act on it.</p>
+    <div id="checklistItems"></div>
+    <div class="progress-row">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 0</div>
+    </div>
+    <button class="reset-link" onclick="resetChecklist()">Clear progress for this country</button>
+  </section>
+
+  <section class="page">
+    <div class="running-head">02 — Language progress</div>
+    <h2>Where you stand</h2>
+    <p class="hint">Where you're at, and where you're aiming for. It helps to see it written down — especially on the weeks when studying feels like it's going nowhere.</p>
+    <div class="lang-grid">
+      <div>
+        <label>Language</label>
+        <select id="langChoice" onchange="saveLang()">
+          <option value="german">German</option>
+          <option value="finnish">Finnish</option>
+          <option value="english">English</option>
+        </select>
+      </div>
+      <div>
+        <label>Current source</label>
+        <input type="text" id="langSource" placeholder="e.g. Deutsche Welle" oninput="saveLang()">
+      </div>
+    </div>
+    <div class="lang-grid">
+      <div style="flex:2 1 260px;">
+        <label>Current → Target</label>
+        <div class="level-track" id="levelTrack"></div>
+        <div class="level-labels"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span></div>
+      </div>
+      <div>
+        <label>Current</label>
+        <select id="langLevel" onchange="saveLang()">
+          <option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option>
+        </select>
+      </div>
+      <div>
+        <label>Target</label>
+        <select id="langGoal" onchange="saveLang()">
+          <option>A2</option><option>B1</option><option>B2</option><option>C1</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="running-head">03 — Migration advisor</div>
+    <h2>Ask a question</h2>
+    <p class="hint">Ask whatever's actually on your mind — a document you're missing, a deadline you're not sure about, nerves about the interview. General guidance only, not a substitute for legal advice.</p>
+    <div class="chat-log" id="chatLog"></div>
+    <div class="chat-input-row">
+      <textarea id="chatInput" placeholder="e.g. What documents do I need for the Finland work permit?"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendChat()">Send</button>
+    </div>
+  </section>
+
+  <footer>
+    This is an early prototype, built to test the idea — not a replacement for checking directly with the source.<br>
+    Finland: <a href="https://migri.fi" target="_blank" rel="noopener">migri.fi</a> ·
+    Germany: your local embassy or <a href="https://www.make-it-in-germany.com" target="_blank" rel="noopener">make-it-in-germany.com</a>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* Small, quiet wireframe seal — no glow, no pulsing, slow constant turn */
+(function initSeal(){
+  const stage = document.getElementById('sealStage');
+  if(typeof THREE === 'undefined' || !stage) return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const w = stage.clientWidth, h = stage.clientHeight;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(34, w / h, 0.1, 10);
+  camera.position.set(0, 0.15, 3.4);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(w, h);
+  stage.appendChild(renderer.domElement);
+
+  const group = new THREE.Group();
+  group.rotation.x = 0.3;
+  scene.add(group);
+
+  const wire = new THREE.Mesh(
+    new THREE.SphereGeometry(1.15, 16, 12),
+    new THREE.MeshBasicMaterial({ color: 0xC9BFA0, wireframe: true, transparent: true, opacity: 0.55 })
+  );
+  group.add(wire);
+
+  function latLon(lat, lon, r){
+    const phi = (90 - lat) * Math.PI / 180, theta = (lon + 180) * Math.PI / 180;
+    return new THREE.Vector3(-r*Math.sin(phi)*Math.cos(theta), r*Math.cos(phi), r*Math.sin(phi)*Math.sin(theta));
+  }
+  [[64,26,0xF1ECDC],[51,10,0xF1ECDC]].forEach(([lat,lon,color]) => {
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(0.045,8,8), new THREE.MeshBasicMaterial({color}));
+    dot.position.copy(latLon(lat, lon, 1.17));
+    group.add(dot);
+  });
+
+  function resize(){
+    const ww = stage.clientWidth, hh = stage.clientHeight;
+    if(!ww || !hh) return;
+    camera.aspect = ww/hh; camera.updateProjectionMatrix();
+    renderer.setSize(ww, hh);
+  }
+  window.addEventListener('resize', resize);
+
+  const clock = new THREE.Clock();
+  function frame(){
+    if(!reduceMotion){
+      group.rotation.y = clock.getElapsedTime() * 0.22;
+      requestAnimationFrame(frame);
+    }
+    renderer.render(scene, camera);
+  }
+  frame();
+})();
+
+const CHECKLISTS = {
+  finland: [
+    ["Confirm the right permit type for your situation", "Eligibility"],
+    ["Secure a formal job offer from a Finnish employer", "Employment"],
+    ["Gather identity documents and certified translations", "Documents"],
+    ["Complete the online application via Enter Finland", "Application"],
+    ["Pay the application fee", "Application"],
+    ["Book and attend your biometric appointment", "Embassy"],
+    ["Prepare proof of sufficient funds", "Finances"],
+    ["Track your application status", "Follow-up"],
+    ["After arrival: register your address and collect your residence card", "Arrival"]
+  ],
+  germany: [
+    ["Identify the right pathway — Chancenkarte, work visa, or EU Blue Card", "Eligibility"],
+    ["Get foreign qualifications recognized, if required", "Qualifications"],
+    ["Gather identity documents and certified translations", "Documents"],
+    ["Prove the language proficiency your pathway requires", "Language"],
+    ["Book your visa appointment at the German embassy", "Embassy"],
+    ["Provide proof of funds or health insurance", "Finances"],
+    ["Complete and submit the visa application", "Application"],
+    ["Track your application outcome", "Follow-up"],
+    ["After arrival: register your address (Anmeldung)", "Arrival"]
+  ]
+};
+const LEVELS = ["A1","A2","B1","B2","C1"];
+
+let currentCountry = 'finland';
+let checklistState = {};
+let chatHistory = [];
+
+function genDocNumber(){
+  const n = Math.floor(Math.random()*9000+1000);
+  document.getElementById('docNumber').textContent = 'FILE NO. MC-' + n;
+}
+genDocNumber();
+
+async function loadChecklist(country){
+  try{
+    const res = await window.storage.get('checklist:' + country);
+    checklistState = res ? JSON.parse(res.value) : {};
+  }catch(e){ checklistState = {}; }
+  renderChecklist();
+}
+
+function renderChecklist(){
+  const list = CHECKLISTS[currentCountry];
+  const container = document.getElementById('checklistItems');
+  container.innerHTML = '';
+  let doneCount = 0;
+  list.forEach((entry, idx) => {
+    const [label, cat] = entry;
+    const done = !!checklistState[idx];
+    if(done) doneCount++;
+    const row = document.createElement('div');
+    row.className = 'item';
+    row.innerHTML = `
+      <button class="check-box ${done ? 'done' : ''}" data-idx="${idx}" aria-label="Mark as ${done ? 'incomplete' : 'complete'}">${done ? '<span>✓</span>' : ''}</button>
+      <div class="txt ${done ? 'done' : ''}">${label}<span class="cat">${cat}</span></div>
+    `;
+    row.querySelector('.check-box').addEventListener('click', () => toggleItem(idx));
+    container.appendChild(row);
+  });
+  const pct = list.length ? Math.round((doneCount / list.length) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${doneCount} / ${list.length}`;
+}
+
+async function toggleItem(idx){
+  checklistState[idx] = !checklistState[idx];
+  renderChecklist();
+  try{ await window.storage.set('checklist:' + currentCountry, JSON.stringify(checklistState)); }
+  catch(e){ console.error('Could not save progress', e); }
+}
+
+async function resetChecklist(){
+  checklistState = {};
+  renderChecklist();
+  try{ await window.storage.set('checklist:' + currentCountry, JSON.stringify({})); }catch(e){}
+}
+
+function switchCountry(country){
+  currentCountry = country;
+  document.getElementById('tabFinland').classList.toggle('active', country === 'finland');
+  document.getElementById('tabGermany').classList.toggle('active', country === 'germany');
+  document.getElementById('checklistTitle').textContent = country === 'finland' ? 'Work Residence Permit' : 'Chancenkarte & Work Visa';
+  loadChecklist(country);
+}
+
+function renderLevelTrack(){
+  const current = document.getElementById('langLevel').value;
+  const target = document.getElementById('langGoal').value;
+  const ci = LEVELS.indexOf(current), ti = LEVELS.indexOf(target);
+  const track = document.getElementById('levelTrack');
+  track.innerHTML = '';
+  LEVELS.forEach((lvl, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'level-cell' + (i <= ti ? ' filled' : '') + (i === ci ? ' current' : '');
+    track.appendChild(cell);
+  });
+}
+
+async function loadLang(){
+  try{
+    const res = await window.storage.get('lang-progress');
+    if(res){
+      const data = JSON.parse(res.value);
+      document.getElementById('langChoice').value = data.lang || 'german';
+      document.getElementById('langLevel').value = data.level || 'A1';
+      document.getElementById('langGoal').value = data.goal || 'B1';
+      document.getElementById('langSource').value = data.source || '';
+    }
+  }catch(e){}
+  renderLevelTrack();
+}
+
+async function saveLang(){
+  const data = {
+    lang: document.getElementById('langChoice').value,
+    level: document.getElementById('langLevel').value,
+    goal: document.getElementById('langGoal').value,
+    source: document.getElementById('langSource').value
+  };
+  renderLevelTrack();
+  try{ await window.storage.set('lang-progress', JSON.stringify(data)); }
+  catch(e){ console.error('Could not save language progress', e); }
+}
+
+function appendMsg(text, cls){
+  const log = document.getElementById('chatLog');
+  const div = document.createElement('div');
+  div.className = 'msg ' + cls;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  return div;
+}
+
+async function sendChat(){
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+  input.value = '';
+  appendMsg(text, 'user');
+  chatHistory.push({role:'user', content:text});
+  const loadingDiv = appendMsg('Thinking…', 'bot loading');
+
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        system: "You are a migration preparation advisor. The user is preparing a work-based move to Finland and is also learning German. Write like a knowledgeable friend, not a corporate FAQ page — plain, warm, direct, and specific. Skip stock phrases like 'feel free to' or 'I hope this helps.' For anything involving legal requirements, fees, or timelines, mention that rules change and they should confirm current details with the official source (migri.fi for Finland; the embassy or make-it-in-germany.com for Germany). Never claim certainty about the outcome of an application.",
+        messages: chatHistory
+      })
+    });
+    const data = await response.json();
+    loadingDiv.remove();
+    if(data && data.content){
+      const textBlock = data.content.map(b => b.text || '').join('\n').trim();
+      appendMsg(textBlock || 'No response received.', 'bot');
+      chatHistory.push({role:'assistant', content: textBlock});
+    } else {
+      appendMsg('Something went wrong. Please try again.', 'bot');
+    }
+  }catch(e){
+    loadingDiv.remove();
+    appendMsg('Could not connect. Check your internet connection.', 'bot');
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('chatInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); }
+});
+
+loadChecklist('finland');
+loadLang();
+</script>
+</body>
+</html>
