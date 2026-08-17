@@ -515,10 +515,18 @@ async function sendChat(){
         messages: chatHistory
       })
     });
-    const data = await response.json();
+  const data = await response.json();
     loadingDiv.remove();
-    if(data && data.content){
-      const textBlock = data.content.map(b => b.text || '').join('\n').trim();
+    if (!response.ok)  {
+      const errorMessage = data?.error?.message|| `API error: ${response.status}`;
+      appendMsg("API Error: " + errormessage, "bot");
+  } else if (data && data.content) {
+      const textblock = data.content.map(b => b.text || "").join("\n").trim();
+      appendMsg(textBlock || "No response received.", "bot");
+      chatHistory.push( {role: "assistment", content: textBlock} );
+  } else {
+      appendMsg("NO response recieved.", "bot");
+  }
       appendMsg(textBlock || 'No response received.', 'bot');
       chatHistory.push({role:'assistant', content: textBlock});
     } else {
